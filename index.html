@@ -2,59 +2,312 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>날짜 말하기 · 월·일 연습</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>한글 자모 결합 연습</title>
 <style>
+:root{
+  --ink:#20242b;
+  --muted:#687080;
+  --line:#dfe4ec;
+  --paper:#ffffff;
+  --bg:#f5f7fb;
+  --red:#dc3e3a;
+  --red-soft:#fff1f0;
+  --blue:#17458f;
+  --blue-soft:#eef4ff;
+  --green:#16845b;
+  --green-soft:#ecf9f3;
+  --violet:#6556c7;
+}
+
 *{box-sizing:border-box}
-body{margin:0;background:#f7f2f7;color:#413653;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
-button{font:inherit;cursor:pointer}
-main{max-width:1440px;margin:auto;padding:36px 48px}
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
-h1{font-size:25px;margin:0}
-.tag{font-size:14px;border:1px solid #d9cce2;border-radius:30px;padding:9px 16px;color:#756681;background:#fff9}
-.layout{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;min-height:70vh}
-.calendar-panel{background:#eee3f2;border-radius:36px;padding:32px;display:grid;place-items:center;aspect-ratio:1;max-height:76vh}
-.calendar{position:relative;width:min(100%,570px);aspect-ratio:1/.82;background:#fffdfb;border:1px solid #e2d7e7;border-radius:28px;overflow:hidden}
-.calendar-top{height:30%;background:#765987;display:flex;align-items:center;justify-content:center;color:#fff}
-.month-number{font-size:clamp(45px,7vw,96px);font-weight:800}
-.month-label{font-size:clamp(24px,3vw,42px);font-weight:700;margin-left:12px}
-.rings{position:absolute;top:calc(30% - 12px);left:0;right:0;display:flex;justify-content:space-around;padding:0 14%}
-.ring{width:18px;height:37px;background:#f1b596;border-radius:10px}
-.calendar-body{height:70%;display:flex;align-items:center;justify-content:center;padding-top:10px}
-.day-number{font-family:Consolas,monospace;font-size:clamp(120px,19vw,255px);font-weight:800;color:#433550}
-.right{padding:20px 0}
-.eyebrow{color:#8a718f;font-size:14px;letter-spacing:3px;font-weight:700;margin:0 0 18px}
-h2{font-size:clamp(25px,3vw,42px);margin:0 0 26px}
-.digital{display:flex;justify-content:center;align-items:baseline;gap:9px;font-family:Consolas,monospace;font-size:clamp(54px,7vw,108px);font-weight:700;padding:30px 8px 34px;background:#fff;border:1px solid #e5dce8;border-radius:25px;margin-bottom:28px;white-space:nowrap}
-.month-answer{color:#765987}.day-answer{color:#d77958}
-.unit{font-family:"Malgun Gothic";font-size:.42em;color:#756b7c;margin-right:5px}
-.buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-button{border:1px solid #dacde2;background:#fff;color:#5b4769;border-radius:15px;min-height:64px;padding:14px 10px;font-weight:700;font-size:18px}
-.random{grid-column:1/-1;background:#765987;color:#fff;border:0;min-height:72px}
-.hint{margin:20px 0 0;color:#8a7d8d;font-size:13px;text-align:center}
-.set-date{margin-top:18px;display:grid;grid-template-columns:1fr 1fr auto;gap:10px}
-.set-date select{min-height:56px;border:1px solid #dacde2;border-radius:12px;padding:0 10px;font-size:16px;background:#fff;color:#5b4769}
-#setDateBtn{background:#d98e70;color:#fff;border:none;padding:0 20px}
+
+body{
+  margin:0;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 0%,#eaf1ff 0,transparent 30%),
+    radial-gradient(circle at 95% 8%,#fff0ec 0,transparent 28%),
+    var(--bg);
+  font-family:"Noto Sans KR","Malgun Gothic",Arial,sans-serif;
+}
+
+button{font:inherit}
+
+.wrap{
+  width:min(100%,1020px);
+  margin:0 auto;
+  padding:22px 20px 28px;
+}
+
+.hero{text-align:center;margin-bottom:15px}
+.hero h1{margin:0;font-size:clamp(28px,4vw,38px);letter-spacing:-.04em}
+.hero p{margin:7px 0 0;color:var(--muted);font-size:17px}
+
+.mode-tabs{
+  display:flex;
+  width:min(100%,430px);
+  margin:0 auto 13px;
+  padding:5px;
+  gap:6px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:#ffffffc9;
+}
+
+.mode-tab{
+  flex:1;
+  border:0;
+  border-radius:11px;
+  padding:10px 12px;
+  color:#555f70;
+  background:transparent;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.mode-tab.active{color:#fff;background:var(--violet);box-shadow:0 5px 14px #6556c738}
+.mode-tab:focus-visible,.letter:focus-visible,.action:focus-visible,.answer:focus-visible{
+  outline:4px solid #ffcd4a;
+  outline-offset:2px;
+}
+
+.panel[hidden]{display:none}
+
+.card{
+  margin-bottom:12px;
+  padding:17px 20px;
+  border:1px solid var(--line);
+  border-radius:19px;
+  background:var(--paper);
+  box-shadow:0 8px 26px #1b2f5d0b;
+}
+
+.label-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.label{font-size:19px;font-weight:900}
+.hint{color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:7px}
+
+.letter{
+  min-height:51px;
+  padding:6px 4px;
+  border:2px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  font-size:28px;
+  font-weight:900;
+  cursor:pointer;
+  transition:transform .15s,background .15s,color .15s,box-shadow .15s;
+}
+
+.letter:hover{transform:translateY(-2px)}
+.consonant{color:var(--red);border-color:#eab9b7}
+.consonant:hover{background:var(--red-soft)}
+.consonant.selected{color:#fff;background:var(--red);border-color:var(--red);box-shadow:0 5px 12px #dc3e3a35}
+.vowel{color:var(--blue);border-color:#b8c8e4}
+.vowel:hover{background:var(--blue-soft)}
+.vowel.selected{color:#fff;background:var(--blue);border-color:var(--blue);box-shadow:0 5px 12px #17458f35}
+
+.demo-card{padding-top:13px}
+.type-badge{
+  display:block;
+  width:max-content;
+  min-height:29px;
+  margin:0 auto;
+  padding:5px 12px;
+  border-radius:999px;
+  color:#586173;
+  background:#f0f2f7;
+  font-size:14px;
+  font-weight:800;
+  visibility:hidden;
+}
+.type-badge.show{visibility:visible}
+
+.stage{
+  position:relative;
+  display:grid;
+  place-items:center;
+  height:230px;
+  overflow:hidden;
+}
+
+.syllable-frame{
+  position:absolute;
+  width:174px;
+  height:174px;
+  border:3px dashed #d8dde8;
+  border-radius:18px;
+  background:linear-gradient(135deg,#fbfcff,#f6f8fc);
+}
+
+.guide-line{position:absolute;background:#e5e8ef;opacity:0;transition:opacity .2s}
+.stage.ready .guide-line{opacity:1}
+.guide-line.vertical{width:2px;height:150px}
+.guide-line.horizontal{width:150px;height:2px}
+
+.part,.result{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font-size:78px;
+  line-height:1;
+  font-weight:900;
+  opacity:0;
+}
+.part.consonant-part{color:var(--red)}
+.part.vowel-part{color:var(--blue)}
+.result{color:var(--ink);font-size:145px}
+.stage.placeholder::after{
+  content:"?";
+  position:absolute;
+  color:#c4cad5;
+  font-size:92px;
+  font-weight:900;
+}
+
+.formula{text-align:center;font-size:29px;font-weight:900;min-height:43px}
+.formula .c{color:var(--red)}
+.formula .v{color:var(--blue)}
+.formula .unknown{color:#9ca4b2}
+.formula .made{color:var(--ink)}
+.info{min-height:25px;margin-top:4px;text-align:center;color:#646e7f;font-size:16px}
+.info.success{color:var(--green);font-weight:800}
+
+.controls{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+.action{
+  min-width:155px;
+  padding:11px 17px;
+  border:1px solid #d5dbe5;
+  border-radius:12px;
+  color:var(--ink);
+  background:#fff;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .15s,background .15s;
+}
+.action:hover:not(:disabled){transform:translateY(-1px);background:#f2f5ff}
+.action.primary{color:#fff;background:var(--violet);border-color:var(--violet)}
+.action.random{color:#594bb3;background:#f3f1ff;border-color:#beb7ea}
+.action.random:hover:not(:disabled){background:#e9e5ff}
+.action:disabled{cursor:not-allowed;opacity:.42}
+
+.practice-card{padding:25px 24px;text-align:center}
+.practice-kicker{margin:0;color:var(--violet);font-weight:900}
+.practice-card h2{margin:5px 0 18px;font-size:23px}
+.practice-formula{font-size:52px;font-weight:900;letter-spacing:.04em}
+.practice-formula .c{color:var(--red)}
+.practice-formula .v{color:var(--blue)}
+.answers{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:min(100%,650px);margin:25px auto 15px}
+.answer{
+  padding:15px 8px;
+  border:2px solid #d9deea;
+  border-radius:15px;
+  color:var(--ink);
+  background:#fff;
+  font-size:34px;
+  font-weight:900;
+  cursor:pointer;
+}
+.answer:hover:not(:disabled){background:#f4f2ff;border-color:#aaa1e7}
+.answer.correct{color:#0c714b;background:var(--green-soft);border-color:#55b48f}
+.answer.wrong{color:#b82f2c;background:var(--red-soft);border-color:#e49a97}
+.practice-feedback{min-height:28px;font-size:18px;font-weight:800}
+.practice-feedback.good{color:var(--green)}
+.practice-feedback.try{color:#b04a29}
+.score{margin-top:16px;color:var(--muted);font-size:15px}
+
+.signature{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  width:min(100%,420px);
+  margin:19px auto 2px;
+  color:#8a8498;
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.signature::before,.signature::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,transparent,#c9c3dd);
+}
+.signature::after{background:linear-gradient(90deg,#c9c3dd,transparent)}
+.signature-name{
+  color:var(--violet);
+  font-family:"Segoe Script","Brush Script MT",cursive;
+  font-size:20px;
+  font-weight:700;
+  letter-spacing:.03em;
+  text-transform:none;
+  white-space:nowrap;
+}
+.signature-star{color:#b8a8e8;font-size:13px}
+
+@media(max-width:680px){
+  .wrap{padding:14px 12px 22px}
+  .hero p{font-size:15px}
+  .card{padding:14px}
+  .label-row{align-items:flex-start;flex-direction:column;gap:2px}
+  .label{font-size:17px}
+  .grid{grid-template-columns:repeat(7,1fr);gap:6px}
+  .letter{min-height:45px;font-size:24px}
+  .stage{height:210px}
+  .syllable-frame{width:158px;height:158px}
+  .guide-line.vertical{height:136px}
+  .guide-line.horizontal{width:136px}
+  .part{font-size:68px}
+  .result{font-size:126px}
+  .formula{font-size:25px}
+  .controls{display:grid;grid-template-columns:1fr 1fr}
+  .action{min-width:0}
+  .action.primary{grid-column:auto}
+  .answers{grid-template-columns:1fr 1fr}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
 
 /* 공통 페이지 메뉴 */
-.page-nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;gap:10px;padding:12px 20px;background:#ffffffee;backdrop-filter:blur(10px);border-bottom:1px solid #dacde2}
-.page-nav button{min-height:auto;padding:9px 18px;border:1px solid #dacde2;border-radius:12px;background:#fff;color:#413653;font:inherit;font-weight:800;cursor:pointer;transition:.15s}
-.page-nav button:hover{background:#eee3f2;transform:translateY(-1px)}
-.page-nav button:first-child{color:#765987}
-
-@media(max-width:760px){
-main{padding:22px 18px}
-.layout{grid-template-columns:1fr;gap:22px;min-height:0}
-.calendar-panel{width:100%;max-width:470px;margin:auto;padding:20px}
-.eyebrow{display:none}
-h2{text-align:center;font-size:25px}
-.digital{font-size:48px;padding:18px 6px;margin-bottom:18px}
-.set-date{grid-template-columns:1fr 1fr auto;gap:8px}
-.set-date select{min-height:48px;font-size:14px}
-#setDateBtn{min-height:48px;font-size:14px}
-.page-nav{padding:10px 8px;gap:6px}
-.page-nav button{padding:8px 10px;font-size:14px}
+.page-nav{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px 20px;
+  background:#ffffffee;
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
 }
+
+.page-nav button{
+  padding:9px 18px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  color:var(--ink);
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.page-nav button:hover{
+  background:var(--blue-soft);
+  transform:translateY(-1px);
+}
+
+.page-nav button:first-child{
+  color:var(--violet);
+}
+
 </style>
 </head>
 <body>
@@ -65,85 +318,414 @@ h2{text-align:center;font-size:25px}
   <button type="button" onclick="location.href='practicedate.html'">✏️ 날짜연습</button>
 </nav>
 
-<main>
-<header><h1>날짜 말하기 연습</h1><span class="tag">월 · 일 연습</span></header>
-<section class="layout">
-<div class="calendar-panel">
-<div class="calendar">
-<div class="calendar-top"><span class="month-number" id="calendarMonth">1</span><span class="month-label">월</span></div>
-<div class="rings"><span class="ring"></span><span class="ring"></span><span class="ring"></span><span class="ring"></span></div>
-<div class="calendar-body"><span class="day-number" id="calendarDay">1</span></div>
-</div></div>
-<div class="right">
-<p class="eyebrow">LET'S TALK ABOUT DATES</p>
-<h2>몇 월 며칠이에요?</h2>
-<div class="digital"><span class="month-answer" id="month">1</span><span class="unit">월</span><span class="day-answer" id="day">1</span><span class="unit">일</span></div>
-<div class="buttons">
-<button id="previous">← 하루 전</button>
-<button id="next">하루 후 →</button>
-<button class="random" id="random">↻ 무작위 날짜</button>
-</div>
-<p class="hint">← 이전 · 다음 → · 스페이스 무작위</p>
-<div class="set-date">
-<select id="setMonth"></select>
-<select id="setDay"></select>
-<button id="setDateBtn">날짜 지정</button>
-</div>
-</div></section>
+<main class="wrap">
+  <header class="hero">
+    <h1>한글 자모 결합</h1>
+    <p>자음과 모음이 어디에 놓이는지 살펴보고 한 글자를 만들어 보세요.</p>
+  </header>
+
+  <nav class="mode-tabs" aria-label="학습 모드 선택">
+    <button class="mode-tab active" id="learnTab" type="button" aria-selected="true">배우기</button>
+    <button class="mode-tab" id="practiceTab" type="button" aria-selected="false">연습하기</button>
+  </nav>
+
+  <section id="learnPanel" class="panel" aria-labelledby="learnTab">
+    <div class="card">
+      <div class="label-row">
+        <div class="label">① 자음 선택</div>
+        <div class="hint">빨간색 자음에서 하나를 고르세요.</div>
+      </div>
+      <div id="cons" class="grid" aria-label="자음 선택"></div>
+    </div>
+
+    <div class="card">
+      <div class="label-row">
+        <div class="label">② 모음 선택</div>
+        <div class="hint">파란색 모음에서 하나를 고르세요.</div>
+      </div>
+      <div id="vows" class="grid" aria-label="모음 선택"></div>
+    </div>
+
+    <div class="card demo-card">
+      <span id="typeBadge" class="type-badge" aria-hidden="true">좌우 결합</span>
+      <div id="stage" class="stage placeholder" aria-label="자음과 모음 결합 화면">
+        <div class="syllable-frame" aria-hidden="true"></div>
+        <div id="guideVertical" class="guide-line vertical" aria-hidden="true"></div>
+        <div id="guideHorizontal" class="guide-line horizontal" aria-hidden="true"></div>
+        <span id="p1" class="part consonant-part" aria-hidden="true"></span>
+        <span id="p2" class="part vowel-part" aria-hidden="true"></span>
+        <span id="result" class="result" aria-hidden="true"></span>
+      </div>
+      <div id="formula" class="formula" aria-hidden="true"><span class="unknown">자음 ＋ 모음 → ?</span></div>
+      <div id="info" class="info" role="status" aria-live="polite">자음과 모음을 하나씩 선택하세요.</div>
+    </div>
+
+    <div class="card">
+      <div class="controls">
+        <button id="randomBtn" class="action random" type="button">🎲 랜덤 선택</button>
+        <button id="combineBtn" class="action primary" type="button" disabled>▶ 결합하기</button>
+        <button id="speakBtn" class="action" type="button" disabled>🔊 발음 듣기</button>
+        <button id="resetBtn" class="action" type="button">↺ 다시 선택</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="practicePanel" class="panel" aria-labelledby="practiceTab" hidden>
+    <div class="card practice-card">
+      <p class="practice-kicker">미니 연습</p>
+      <h2>두 자모를 결합한 글자를 고르세요.</h2>
+      <div id="practiceFormula" class="practice-formula"></div>
+      <div id="answers" class="answers" aria-label="정답 선택"></div>
+      <div id="practiceFeedback" class="practice-feedback" role="status" aria-live="polite">정답을 선택하세요.</div>
+      <button id="nextBtn" class="action primary" type="button" disabled>다음 문제 →</button>
+      <div id="score" class="score">푼 문제 0개 · 정답 0개</div>
+    </div>
+  </section>
+
+  <footer class="signature" aria-label="제작자 SY Choi">
+    <span class="signature-star" aria-hidden="true">✦</span>
+    <span>Made by</span>
+    <span class="signature-name">SY Choi</span>
+    <span class="signature-star" aria-hidden="true">✦</span>
+  </footer>
 </main>
 
 <script>
-const daysInMonth=[31,28,31,30,31,30,31,31,30,31,30,31];
-const dates=[];
-for(let month=1;month<=12;month++){
-for(let day=1;day<=daysInMonth[month-1];day++) dates.push({month,day});
+const consonants=["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+const vowels=["ㅏ","ㅑ","ㅓ","ㅕ","ㅗ","ㅛ","ㅜ","ㅠ","ㅡ","ㅣ"];
+const verticalVowels=new Set(["ㅏ","ㅑ","ㅓ","ㅕ","ㅣ"]);
+const unicodeInitials=["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+const unicodeVowels=["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"];
+
+let selectedC=null;
+let selectedV=null;
+let revealed=false;
+let revealTimer=null;
+let question=null;
+let attempts=0;
+let correctCount=0;
+let lastRandomKey=null;
+
+const $=id=>document.getElementById(id);
+const stage=$("stage");
+const p1=$("p1");
+const p2=$("p2");
+const result=$("result");
+
+function syllable(c,v){
+  const ci=unicodeInitials.indexOf(c);
+  const vi=unicodeVowels.indexOf(v);
+  return ci<0||vi<0?"?":String.fromCharCode(0xAC00+(ci*21+vi)*28);
 }
-let index=0;
-const el=id=>document.getElementById(id);
-function populateMonths(){
-for(let m=1;m<=12;m++){
-const o=document.createElement('option');
-o.value=m;o.textContent=m+'월';el('setMonth').appendChild(o);
+
+function makeButtons(id,items,type,handler){
+  const box=$(id);
+  items.forEach(value=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className=`letter ${type}`;
+    button.textContent=value;
+    button.setAttribute("aria-label",`${type==="consonant"?"자음":"모음"} ${value}`);
+    button.setAttribute("aria-pressed","false");
+    button.addEventListener("click",()=>handler(value,button));
+    box.appendChild(button);
+  });
 }
+
+function selectOnly(container,button){
+  container.querySelectorAll(".letter").forEach(item=>{
+    item.classList.remove("selected");
+    item.setAttribute("aria-pressed","false");
+  });
+  button.classList.add("selected");
+  button.setAttribute("aria-pressed","true");
 }
-function populateDays(month){
-const daySelect=el('setDay');
-daySelect.innerHTML='';
-for(let d=1;d<=daysInMonth[month-1];d++){
-const o=document.createElement('option');
-o.value=d;o.textContent=d+'일';daySelect.appendChild(o);
+
+function chooseC(value,button){
+  selectedC=value;
+  selectOnly($("cons"),button);
+  prepareSelection();
 }
+
+function chooseV(value,button){
+  selectedV=value;
+  selectOnly($("vows"),button);
+  prepareSelection();
 }
-function render(){
-const {month,day}=dates[index];
-el('calendarMonth').textContent=month;
-el('calendarDay').textContent=day;
-el('month').textContent=month;
-el('day').textContent=day;
-el('setMonth').value=month;
-populateDays(month);
-el('setDay').value=day;
+
+function cancelMotion(){
+  clearTimeout(revealTimer);
+  [p1,p2,result].forEach(element=>{
+    element.getAnimations().forEach(animation=>animation.cancel());
+    element.style.opacity="";
+    element.style.left="";
+    element.style.top="";
+  });
 }
-function move(delta){index=(index+delta+dates.length)%dates.length;render();}
-function randomDate(){index=(index+1+Math.floor(Math.random()*(dates.length-1)))%dates.length;render();}
-el('previous').onclick=()=>move(-1);
-el('next').onclick=()=>move(1);
-el('random').onclick=randomDate;
-populateMonths();
-populateDays(1);
-el('setMonth').addEventListener('change',e=>{populateDays(Number(e.target.value));});
-el('setDateBtn').addEventListener('click',()=>{
-const month=Number(el('setMonth').value);
-const day=Number(el('setDay').value);
-index=dates.findIndex(d=>d.month===month && d.day===day);
-render();
-});
-document.addEventListener('keydown',e=>{
-if(e.key==='ArrowLeft') move(-1);
-else if(e.key==='ArrowRight') move(1);
-else if(e.code==='Space'){e.preventDefault();randomDate();}
-});
-render();
+
+function positions(){
+  if(verticalVowels.has(selectedV)){
+    return {
+      type:"좌우 결합",
+      guide:"vertical",
+      cStart:["10%","50%"],cEnd:["39%","50%"],
+      vStart:["90%","50%"],vEnd:["64%","50%"]
+    };
+  }
+  return {
+    type:"상하 결합",
+    guide:"horizontal",
+    cStart:["50%","9%"],cEnd:["50%","37%"],
+    vStart:["50%","91%"],vEnd:["50%","66%"]
+  };
+}
+
+function placePart(element,coords){
+  element.style.left=coords[0];
+  element.style.top=coords[1];
+  element.style.opacity="1";
+}
+
+function prepareSelection(){
+  cancelMotion();
+  revealed=false;
+  $("speakBtn").disabled=true;
+  result.textContent="";
+  result.setAttribute("aria-hidden","true");
+  stage.classList.add("placeholder");
+  stage.classList.remove("ready");
+  $("typeBadge").classList.remove("show");
+  $("guideVertical").style.display="none";
+  $("guideHorizontal").style.display="none";
+
+  if(!selectedC||!selectedV){
+    p1.textContent=selectedC||"";
+    p2.textContent=selectedV||"";
+    p1.style.opacity=selectedC?"1":"0";
+    p2.style.opacity=selectedV?"1":"0";
+    if(selectedC){ placePart(p1,["35%","50%"]); }
+    if(selectedV){ placePart(p2,["65%","50%"]); }
+    $("formula").innerHTML=selectedC
+      ?`<span class="c">${selectedC}</span> ＋ <span class="unknown">모음 → ?</span>`
+      :selectedV
+        ?`<span class="unknown">자음 ＋ </span><span class="v">${selectedV}</span><span class="unknown"> → ?</span>`
+        :`<span class="unknown">자음 ＋ 모음 → ?</span>`;
+    $("info").textContent=selectedC?"모음도 선택하세요.":selectedV?"자음도 선택하세요.":"자음과 모음을 하나씩 선택하세요.";
+    $("info").classList.remove("success");
+    $("combineBtn").disabled=true;
+    $("randomBtn").textContent=selectedC||selectedV?"🎲 다른 조합":"🎲 랜덤 선택";
+    return;
+  }
+
+  const layout=positions();
+  p1.textContent=selectedC;
+  p2.textContent=selectedV;
+  placePart(p1,layout.cStart);
+  placePart(p2,layout.vStart);
+  stage.classList.remove("placeholder");
+  stage.classList.add("ready");
+  $("guideVertical").style.display=layout.guide==="vertical"?"block":"none";
+  $("guideHorizontal").style.display=layout.guide==="horizontal"?"block":"none";
+  $("typeBadge").textContent=layout.type;
+  $("typeBadge").classList.add("show");
+  $("formula").innerHTML=`<span class="c">${selectedC}</span> ＋ <span class="v">${selectedV}</span> → <span class="unknown">?</span>`;
+  $("info").textContent="어떤 글자가 될까요? 먼저 소리 내어 말해 보세요.";
+  $("info").classList.remove("success");
+  $("combineBtn").disabled=false;
+  $("randomBtn").textContent="🎲 다른 조합";
+}
+
+function combine(){
+  if(!selectedC||!selectedV)return;
+  cancelMotion();
+  const layout=positions();
+  const made=syllable(selectedC,selectedV);
+  revealed=false;
+  $("combineBtn").disabled=true;
+  $("speakBtn").disabled=true;
+  placePart(p1,layout.cStart);
+  placePart(p2,layout.vStart);
+  result.textContent=made;
+
+  const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const duration=reduced?10:1050;
+  const fadeStart=reduced?.5:.78;
+  const timing={duration,easing:"cubic-bezier(.22,.8,.25,1)",fill:"forwards"};
+  p1.animate([
+    {left:layout.cStart[0],top:layout.cStart[1],opacity:1},
+    {left:layout.cEnd[0],top:layout.cEnd[1],opacity:1,offset:fadeStart},
+    {left:layout.cEnd[0],top:layout.cEnd[1],opacity:0}
+  ],timing);
+  p2.animate([
+    {left:layout.vStart[0],top:layout.vStart[1],opacity:1},
+    {left:layout.vEnd[0],top:layout.vEnd[1],opacity:1,offset:fadeStart},
+    {left:layout.vEnd[0],top:layout.vEnd[1],opacity:0}
+  ],timing);
+  result.animate(
+    [{opacity:0,transform:"translate(-50%,-50%) scale(.72)"},{opacity:1,transform:"translate(-50%,-50%) scale(1.08)",offset:.65},{opacity:1,transform:"translate(-50%,-50%) scale(1)"}],
+    {duration:reduced?10:560,delay:reduced?0:760,easing:"cubic-bezier(.2,.8,.25,1)",fill:"forwards"}
+  );
+
+  revealTimer=setTimeout(()=>{
+    revealed=true;
+    result.setAttribute("aria-hidden","false");
+    $("formula").innerHTML=`<span class="c">${selectedC}</span> ＋ <span class="v">${selectedV}</span> → <span class="made">${made}</span>`;
+    $("info").textContent=`${selectedC}과 ${selectedV}를 결합하면 ‘${made}’가 됩니다.`;
+    $("info").classList.add("success");
+    $("combineBtn").disabled=false;
+    $("speakBtn").disabled=false;
+    $("randomBtn").textContent="🎲 다음 조합";
+  },reduced?20:1150);
+}
+
+function randomSelection(){
+  if("speechSynthesis" in window)window.speechSynthesis.cancel();
+  let nextC;
+  let nextV;
+  let nextKey;
+  do{
+    nextC=randomFrom(consonants);
+    nextV=randomFrom(vowels);
+    nextKey=`${nextC}|${nextV}`;
+  }while(nextKey===lastRandomKey);
+  lastRandomKey=nextKey;
+  selectedC=nextC;
+  selectedV=nextV;
+
+  const consonantButton=[...$("cons").querySelectorAll(".letter")]
+    .find(button=>button.textContent===selectedC);
+  const vowelButton=[...$("vows").querySelectorAll(".letter")]
+    .find(button=>button.textContent===selectedV);
+  selectOnly($("cons"),consonantButton);
+  selectOnly($("vows"),vowelButton);
+  prepareSelection();
+  $("info").textContent="랜덤 조합입니다. 어떤 글자가 될까요? 먼저 말해 보세요.";
+}
+
+function koreanVoice(){
+  const voices=window.speechSynthesis?window.speechSynthesis.getVoices():[];
+  return voices.find(voice=>voice.lang.toLowerCase()==="ko-kr")||voices.find(voice=>voice.lang.toLowerCase().startsWith("ko"))||null;
+}
+
+function speakText(text,statusElement){
+  if(!("speechSynthesis" in window)){
+    statusElement.textContent="이 브라우저에서는 발음 듣기를 지원하지 않습니다.";
+    statusElement.classList.remove("success","good");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(text);
+  utterance.lang="ko-KR";
+  utterance.rate=.78;
+  const voice=koreanVoice();
+  if(voice)utterance.voice=voice;
+  utterance.onerror=()=>{statusElement.textContent="발음을 재생하지 못했습니다. 기기의 한국어 음성을 확인하세요.";};
+  window.speechSynthesis.speak(utterance);
+}
+
+function speak(){
+  if(revealed)speakText(syllable(selectedC,selectedV),$("info"));
+}
+
+function resetAll(){
+  if("speechSynthesis" in window)window.speechSynthesis.cancel();
+  cancelMotion();
+  selectedC=null;
+  selectedV=null;
+  revealed=false;
+  document.querySelectorAll("#cons .letter,#vows .letter").forEach(button=>{
+    button.classList.remove("selected");
+    button.setAttribute("aria-pressed","false");
+  });
+  p1.textContent="";
+  p2.textContent="";
+  result.textContent="";
+  result.setAttribute("aria-hidden","true");
+  stage.className="stage placeholder";
+  $("typeBadge").classList.remove("show");
+  $("guideVertical").style.display="none";
+  $("guideHorizontal").style.display="none";
+  $("formula").innerHTML=`<span class="unknown">자음 ＋ 모음 → ?</span>`;
+  $("info").textContent="자음과 모음을 하나씩 선택하세요.";
+  $("info").classList.remove("success");
+  $("combineBtn").disabled=true;
+  $("speakBtn").disabled=true;
+  $("randomBtn").textContent="🎲 랜덤 선택";
+}
+
+function switchMode(mode){
+  const learning=mode==="learn";
+  $("learnPanel").hidden=!learning;
+  $("practicePanel").hidden=learning;
+  $("learnTab").classList.toggle("active",learning);
+  $("practiceTab").classList.toggle("active",!learning);
+  $("learnTab").setAttribute("aria-selected",String(learning));
+  $("practiceTab").setAttribute("aria-selected",String(!learning));
+  if(!learning&&!question)newQuestion();
+}
+
+function shuffle(items){
+  for(let i=items.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [items[i],items[j]]=[items[j],items[i]];
+  }
+  return items;
+}
+
+function randomFrom(items){return items[Math.floor(Math.random()*items.length)];}
+
+function newQuestion(){
+  const c=randomFrom(consonants);
+  const v=randomFrom(vowels);
+  const answer=syllable(c,v);
+  const choices=new Set([answer]);
+  while(choices.size<4){choices.add(syllable(randomFrom(consonants),randomFrom(vowels)));}
+  question={c,v,answer,answered:false};
+  $("practiceFormula").innerHTML=`<span class="c">${c}</span> ＋ <span class="v">${v}</span> → ?`;
+  $("practiceFeedback").textContent="정답을 선택하세요.";
+  $("practiceFeedback").className="practice-feedback";
+  $("nextBtn").disabled=true;
+  const box=$("answers");
+  box.innerHTML="";
+  shuffle([...choices]).forEach(choice=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="answer";
+    button.textContent=choice;
+    button.setAttribute("aria-label",`선택지 ${choice}`);
+    button.addEventListener("click",()=>checkAnswer(choice,button));
+    box.appendChild(button);
+  });
+}
+
+function checkAnswer(choice,button){
+  if(!question||question.answered)return;
+  question.answered=true;
+  attempts++;
+  const isCorrect=choice===question.answer;
+  if(isCorrect)correctCount++;
+  $("answers").querySelectorAll(".answer").forEach(item=>{
+    item.disabled=true;
+    if(item.textContent===question.answer)item.classList.add("correct");
+  });
+  if(!isCorrect)button.classList.add("wrong");
+  $("practiceFeedback").textContent=isCorrect?`정답입니다! ${question.answer}`:`정답은 ${question.answer}입니다.`;
+  $("practiceFeedback").className=`practice-feedback ${isCorrect?"good":"try"}`;
+  $("score").textContent=`푼 문제 ${attempts}개 · 정답 ${correctCount}개`;
+  $("nextBtn").disabled=false;
+  speakText(question.answer,$("practiceFeedback"));
+}
+
+makeButtons("cons",consonants,"consonant",chooseC);
+makeButtons("vows",vowels,"vowel",chooseV);
+$("combineBtn").addEventListener("click",combine);
+$("randomBtn").addEventListener("click",randomSelection);
+$("speakBtn").addEventListener("click",speak);
+$("resetBtn").addEventListener("click",resetAll);
+$("learnTab").addEventListener("click",()=>switchMode("learn"));
+$("practiceTab").addEventListener("click",()=>switchMode("practice"));
+$("nextBtn").addEventListener("click",newQuestion);
+resetAll();
 </script>
 </body>
 </html>
