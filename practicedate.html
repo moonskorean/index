@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>날짜 말하기 · 월·일 연습</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f7f2f7;color:#413653;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+button{font:inherit;cursor:pointer}
+main{max-width:1440px;margin:auto;padding:36px 48px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
+h1{font-size:25px;margin:0}
+.tag{font-size:14px;border:1px solid #d9cce2;border-radius:30px;padding:9px 16px;color:#756681;background:#fff9}
+.layout{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;min-height:70vh}
+.calendar-panel{background:#eee3f2;border-radius:36px;padding:32px;display:grid;place-items:center;aspect-ratio:1;max-height:76vh}
+.calendar{position:relative;width:min(100%,570px);aspect-ratio:1/.82;background:#fffdfb;border:1px solid #e2d7e7;border-radius:28px;overflow:hidden}
+.calendar-top{height:30%;background:#765987;display:flex;align-items:center;justify-content:center;color:#fff}
+.month-number{font-size:clamp(45px,7vw,96px);font-weight:800}
+.month-label{font-size:clamp(24px,3vw,42px);font-weight:700;margin-left:12px}
+.rings{position:absolute;top:calc(30% - 12px);left:0;right:0;display:flex;justify-content:space-around;padding:0 14%}
+.ring{width:18px;height:37px;background:#f1b596;border-radius:10px}
+.calendar-body{height:70%;display:flex;align-items:center;justify-content:center;padding-top:10px}
+.day-number{font-family:Consolas,monospace;font-size:clamp(120px,19vw,255px);font-weight:800;color:#433550}
+.right{padding:20px 0}
+.eyebrow{color:#8a718f;font-size:14px;letter-spacing:3px;font-weight:700;margin:0 0 18px}
+h2{font-size:clamp(25px,3vw,42px);margin:0 0 26px}
+.digital{display:flex;justify-content:center;align-items:baseline;gap:9px;font-family:Consolas,monospace;font-size:clamp(54px,7vw,108px);font-weight:700;padding:30px 8px 34px;background:#fff;border:1px solid #e5dce8;border-radius:25px;margin-bottom:28px;white-space:nowrap}
+.month-answer{color:#765987}.day-answer{color:#d77958}
+.unit{font-family:"Malgun Gothic";font-size:.42em;color:#756b7c;margin-right:5px}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+button{border:1px solid #dacde2;background:#fff;color:#5b4769;border-radius:15px;min-height:64px;padding:14px 10px;font-weight:700;font-size:18px}
+.random{grid-column:1/-1;background:#765987;color:#fff;border:0;min-height:72px}
+.hint{margin:20px 0 0;color:#8a7d8d;font-size:13px;text-align:center}
+
+.set-date{margin-top:18px;display:grid;grid-template-columns:1fr 1fr auto;gap:10px}
+.set-date select{min-height:56px;border:1px solid #dacde2;border-radius:12px;padding:0 10px;font-size:16px;background:#fff;color:#5b4769}
+#setDateBtn{background:#d98e70;color:#fff;border:none;padding:0 20px}
+
+@media(max-width:760px){
+main{padding:22px 18px}
+.layout{grid-template-columns:1fr;gap:22px;min-height:0}
+.calendar-panel{width:100%;max-width:470px;margin:auto;padding:20px}
+.eyebrow{display:none}
+h2{text-align:center;font-size:25px}
+.digital{font-size:48px;padding:18px 6px;margin-bottom:18px}
+.set-date{grid-template-columns:1fr 1fr auto;gap:8px}
+.set-date select{min-height:48px;font-size:14px}
+#setDateBtn{min-height:48px;font-size:14px}
+}
+</style>
+</head>
+<body>
+<main>
+<header><h1>날짜 말하기 연습</h1><span class="tag">월 · 일 연습</span></header>
+<section class="layout">
+<div class="calendar-panel">
+<div class="calendar">
+<div class="calendar-top"><span class="month-number" id="calendarMonth">1</span><span class="month-label">월</span></div>
+<div class="rings"><span class="ring"></span><span class="ring"></span><span class="ring"></span><span class="ring"></span></div>
+<div class="calendar-body"><span class="day-number" id="calendarDay">1</span></div>
+</div></div>
+<div class="right">
+<p class="eyebrow">LET'S TALK ABOUT DATES</p>
+<h2>몇 월 며칠이에요?</h2>
+<div class="digital"><span class="month-answer" id="month">1</span><span class="unit">월</span><span class="day-answer" id="day">1</span><span class="unit">일</span></div>
+<div class="buttons">
+<button id="previous">← 하루 전</button>
+<button id="next">하루 후 →</button>
+<button class="random" id="random">↻ 무작위 날짜</button>
+</div>
+<p class="hint">← 이전 · 다음 → · 스페이스 무작위</p>
+
+<div class="set-date">
+<select id="setMonth"></select>
+<select id="setDay"></select>
+<button id="setDateBtn">날짜 지정</button>
+</div>
+
+</div></section>
+</main>
+
+<script>
+const daysInMonth=[31,28,31,30,31,30,31,31,30,31,30,31];
+const dates=[];
+for(let month=1;month<=12;month++){
+for(let day=1;day<=daysInMonth[month-1];day++) dates.push({month,day});
+}
+let index=0;
+const el=id=>document.getElementById(id);
+
+function populateMonths(){
+for(let m=1;m<=12;m++){
+const o=document.createElement('option');
+o.value=m;o.textContent=m+'월';
+el('setMonth').appendChild(o);
+}
+}
+
+function populateDays(month){
+const daySelect=el('setDay');
+daySelect.innerHTML='';
+for(let d=1;d<=daysInMonth[month-1];d++){
+const o=document.createElement('option');
+o.value=d;o.textContent=d+'일';
+daySelect.appendChild(o);
+}
+}
+
+function render(){
+const {month,day}=dates[index];
+el('calendarMonth').textContent=month;
+el('calendarDay').textContent=day;
+el('month').textContent=month;
+el('day').textContent=day;
+el('setMonth').value=month;
+populateDays(month);
+el('setDay').value=day;
+}
+
+function move(delta){
+index=(index+delta+dates.length)%dates.length;
+render();
+}
+
+function randomDate(){
+index=(index+1+Math.floor(Math.random()*(dates.length-1)))%dates.length;
+render();
+}
+
+el('previous').onclick=()=>move(-1);
+el('next').onclick=()=>move(1);
+el('random').onclick=randomDate;
+
+populateMonths();
+populateDays(1);
+
+el('setMonth').addEventListener('change',e=>{
+populateDays(Number(e.target.value));
+});
+
+el('setDateBtn').addEventListener('click',()=>{
+const month=Number(el('setMonth').value);
+const day=Number(el('setDay').value);
+index=dates.findIndex(d=>d.month===month && d.day===day);
+render();
+});
+
+document.addEventListener('keydown',e=>{
+if(e.key==='ArrowLeft') move(-1);
+else if(e.key==='ArrowRight') move(1);
+else if(e.code==='Space'){e.preventDefault();randomDate();}
+});
+
+render();
+</script>
+</body>
+</html>
