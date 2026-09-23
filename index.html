@@ -272,9 +272,59 @@ button{font:inherit}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
+
+/* 공통 페이지 메뉴 */
+.page-nav{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px 20px;
+  background:#ffffffee;
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+
+.page-nav button{
+  padding:9px 18px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  color:var(--ink);
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.page-nav button:hover{
+  background:var(--blue-soft);
+  transform:translateY(-1px);
+}
+
+.page-nav button:first-child{
+  color:var(--violet);
+}
+
 </style>
 </head>
 <body>
+
+<nav class="page-nav" aria-label="페이지 이동">
+  <button type="button" onclick="location.href='index.html'">
+    🏠 처음으로
+  </button>
+  <button type="button" onclick="location.href='practicetime.html'">
+    ✏️ 시간연습
+  </button>
+</nav>
+    <button type="button" onclick="location.href='practicedate.html'">
+    ✏️ 날짜연습
+  </button>
+</nav>
+
 <main class="wrap">
   <header class="hero">
     <h1>한글 자모 결합</h1>
