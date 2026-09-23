@@ -32,10 +32,15 @@ h2{font-size:clamp(25px,3vw,42px);margin:0 0 26px}
 button{border:1px solid #dacde2;background:#fff;color:#5b4769;border-radius:15px;min-height:64px;padding:14px 10px;font-weight:700;font-size:18px}
 .random{grid-column:1/-1;background:#765987;color:#fff;border:0;min-height:72px}
 .hint{margin:20px 0 0;color:#8a7d8d;font-size:13px;text-align:center}
-
 .set-date{margin-top:18px;display:grid;grid-template-columns:1fr 1fr auto;gap:10px}
 .set-date select{min-height:56px;border:1px solid #dacde2;border-radius:12px;padding:0 10px;font-size:16px;background:#fff;color:#5b4769}
 #setDateBtn{background:#d98e70;color:#fff;border:none;padding:0 20px}
+
+/* 공통 페이지 메뉴 */
+.page-nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;gap:10px;padding:12px 20px;background:#ffffffee;backdrop-filter:blur(10px);border-bottom:1px solid #dacde2}
+.page-nav button{min-height:auto;padding:9px 18px;border:1px solid #dacde2;border-radius:12px;background:#fff;color:#413653;font:inherit;font-weight:800;cursor:pointer;transition:.15s}
+.page-nav button:hover{background:#eee3f2;transform:translateY(-1px)}
+.page-nav button:first-child{color:#765987}
 
 @media(max-width:760px){
 main{padding:22px 18px}
@@ -47,10 +52,19 @@ h2{text-align:center;font-size:25px}
 .set-date{grid-template-columns:1fr 1fr auto;gap:8px}
 .set-date select{min-height:48px;font-size:14px}
 #setDateBtn{min-height:48px;font-size:14px}
+.page-nav{padding:10px 8px;gap:6px}
+.page-nav button{padding:8px 10px;font-size:14px}
 }
 </style>
 </head>
 <body>
+
+<nav class="page-nav" aria-label="페이지 이동">
+  <button type="button" onclick="location.href='index.html'">🏠 처음으로</button>
+  <button type="button" onclick="location.href='practicetime.html'">✏️ 시간연습</button>
+  <button type="button" onclick="location.href='practicedate.html'">✏️ 날짜연습</button>
+</nav>
+
 <main>
 <header><h1>날짜 말하기 연습</h1><span class="tag">월 · 일 연습</span></header>
 <section class="layout">
@@ -70,13 +84,11 @@ h2{text-align:center;font-size:25px}
 <button class="random" id="random">↻ 무작위 날짜</button>
 </div>
 <p class="hint">← 이전 · 다음 → · 스페이스 무작위</p>
-
 <div class="set-date">
 <select id="setMonth"></select>
 <select id="setDay"></select>
 <button id="setDateBtn">날짜 지정</button>
 </div>
-
 </div></section>
 </main>
 
@@ -88,25 +100,20 @@ for(let day=1;day<=daysInMonth[month-1];day++) dates.push({month,day});
 }
 let index=0;
 const el=id=>document.getElementById(id);
-
 function populateMonths(){
 for(let m=1;m<=12;m++){
 const o=document.createElement('option');
-o.value=m;o.textContent=m+'월';
-el('setMonth').appendChild(o);
+o.value=m;o.textContent=m+'월';el('setMonth').appendChild(o);
 }
 }
-
 function populateDays(month){
 const daySelect=el('setDay');
 daySelect.innerHTML='';
 for(let d=1;d<=daysInMonth[month-1];d++){
 const o=document.createElement('option');
-o.value=d;o.textContent=d+'일';
-daySelect.appendChild(o);
+o.value=d;o.textContent=d+'일';daySelect.appendChild(o);
 }
 }
-
 function render(){
 const {month,day}=dates[index];
 el('calendarMonth').textContent=month;
@@ -117,41 +124,25 @@ el('setMonth').value=month;
 populateDays(month);
 el('setDay').value=day;
 }
-
-function move(delta){
-index=(index+delta+dates.length)%dates.length;
-render();
-}
-
-function randomDate(){
-index=(index+1+Math.floor(Math.random()*(dates.length-1)))%dates.length;
-render();
-}
-
+function move(delta){index=(index+delta+dates.length)%dates.length;render();}
+function randomDate(){index=(index+1+Math.floor(Math.random()*(dates.length-1)))%dates.length;render();}
 el('previous').onclick=()=>move(-1);
 el('next').onclick=()=>move(1);
 el('random').onclick=randomDate;
-
 populateMonths();
 populateDays(1);
-
-el('setMonth').addEventListener('change',e=>{
-populateDays(Number(e.target.value));
-});
-
+el('setMonth').addEventListener('change',e=>{populateDays(Number(e.target.value));});
 el('setDateBtn').addEventListener('click',()=>{
 const month=Number(el('setMonth').value);
 const day=Number(el('setDay').value);
 index=dates.findIndex(d=>d.month===month && d.day===day);
 render();
 });
-
 document.addEventListener('keydown',e=>{
 if(e.key==='ArrowLeft') move(-1);
 else if(e.key==='ArrowRight') move(1);
 else if(e.code==='Space'){e.preventDefault();randomDate();}
 });
-
 render();
 </script>
 </body>
