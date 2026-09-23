@@ -212,6 +212,267 @@ select{
     }
 }
 </style>
+<style>
+/* =========================
+   모바일 화면 최적화
+   ========================= */
+
+@media(max-width:680px){
+
+  body{
+    min-width:0;
+    overflow-x:hidden;
+  }
+
+  /* 상단 메뉴 */
+  .page-nav{
+    padding:8px 6px;
+    gap:5px;
+  }
+
+  .page-nav button{
+    flex:1 1 0;
+    min-width:0;
+    padding:7px 4px;
+    font-size:13px;
+    white-space:nowrap;
+    border-radius:10px;
+  }
+
+  /* 전체 여백 */
+  .wrap{
+    width:100%;
+    padding:9px 9px 15px;
+  }
+
+  /* 제목 */
+  .hero{
+    margin-bottom:8px;
+  }
+
+  .hero h1{
+    font-size:23px;
+  }
+
+  .hero p{
+    margin-top:4px;
+    font-size:12px;
+    line-height:1.35;
+  }
+
+  /* 배우기 / 연습하기 */
+  .mode-tabs{
+    width:100%;
+    margin-bottom:8px;
+    padding:3px;
+    gap:3px;
+    border-radius:12px;
+  }
+
+  .mode-tab{
+    padding:7px 6px;
+    font-size:14px;
+    border-radius:9px;
+  }
+
+  /* 카드 */
+  .card{
+    margin-bottom:7px;
+    padding:9px 10px;
+    border-radius:14px;
+  }
+
+  .label-row{
+    align-items:center;
+    flex-direction:row;
+    gap:6px;
+    margin-bottom:6px;
+  }
+
+  .label{
+    font-size:14px;
+  }
+
+  .hint{
+    font-size:10px;
+    white-space:nowrap;
+  }
+
+  /* 자음 / 모음 */
+  .grid{
+    grid-template-columns:repeat(7,1fr);
+    gap:4px;
+  }
+
+  .letter{
+    min-height:38px;
+    padding:3px 2px;
+    border-radius:9px;
+    font-size:20px;
+  }
+
+  /* 자모 결합 영역 */
+  .demo-card{
+    padding-top:7px;
+  }
+
+  .type-badge{
+    min-height:22px;
+    padding:3px 8px;
+    font-size:10px;
+  }
+
+  .stage{
+    height:135px;
+  }
+
+  .syllable-frame{
+    width:108px;
+    height:108px;
+    border-radius:12px;
+  }
+
+  .guide-line.vertical{
+    height:92px;
+  }
+
+  .guide-line.horizontal{
+    width:92px;
+  }
+
+  .part{
+    font-size:48px;
+  }
+
+  .result{
+    font-size:88px;
+  }
+
+  .stage.placeholder::after{
+    font-size:58px;
+  }
+
+  .formula{
+    font-size:19px;
+  }
+
+  .info{
+    font-size:11px;
+    white-space:nowrap;
+  }
+
+  /* 버튼 */
+  .controls{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+  }
+
+  .action{
+    min-width:0;
+    padding:8px 5px;
+    border-radius:9px;
+    font-size:12px;
+  }
+
+  .action.random{
+    grid-column:1/-1;
+  }
+
+  /* 연습하기 */
+  .practice-card{
+    padding:14px 10px;
+  }
+
+  .practice-card h2{
+    font-size:17px;
+  }
+
+  .practice-formula{
+    font-size:39px;
+  }
+
+  .answers{
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+  }
+
+  .answer{
+    padding:10px 5px;
+    font-size:28px;
+  }
+}
+
+
+/* 아주 작은 휴대폰 */
+@media(max-width:380px){
+
+  .wrap{
+    padding-left:6px;
+    padding-right:6px;
+  }
+
+  .page-nav button{
+    font-size:11px;
+    padding:6px 2px;
+  }
+
+  .hero h1{
+    font-size:21px;
+  }
+
+  .hero p{
+    font-size:11px;
+  }
+
+  .label{
+    font-size:13px;
+  }
+
+  .hint{
+    font-size:9px;
+  }
+
+  .grid{
+    gap:3px;
+  }
+
+  .letter{
+    min-height:35px;
+    font-size:18px;
+  }
+
+  .stage{
+    height:120px;
+  }
+
+  .syllable-frame{
+    width:96px;
+    height:96px;
+  }
+
+  .part{
+    font-size:42px;
+  }
+
+  .result{
+    font-size:78px;
+  }
+
+  .formula{
+    font-size:17px;
+  }
+
+  .info{
+    font-size:10px;
+  }
+
+  .action{
+    font-size:11px;
+    padding:7px 3px;
+  }
+}
+</style>
 </head>
 
 <body>
