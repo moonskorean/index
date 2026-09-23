@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시간 말하기 연습</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:#f4f3ee;
+    font-family:"Malgun Gothic",sans-serif;
+    color:#233d39;
+}
+
+main{
+    max-width:1400px;
+    margin:auto;
+    padding:30px;
+}
+
+header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+h1{
+    margin:0;
+    font-size:32px;
+}
+
+.layout{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:center;
+}
+
+.clock-panel{
+    background:#e5ede7;
+    border-radius:30px;
+    padding:20px;
+}
+
+.clock{
+    width:100%;
+    height:auto;
+}
+
+h2{
+    text-align:center;
+    font-size:64px;
+    font-weight:800;
+    margin:0 0 25px 0;
+    letter-spacing:-2px;
+    color:#1f4339;
+}
+
+.digital{
+    width:100%;
+    text-align:center;
+    font-size:130px;
+    font-weight:700;
+    font-family:Consolas,monospace;
+    background:#ffffff;
+    border:1px solid #d7dfda;
+    border-radius:24px;
+    padding:25px;
+    margin-bottom:24px;
+    box-shadow:0 6px 18px rgba(0,0,0,.05);
+}
+
+#hour{
+    color:#1f4339;
+}
+
+.minute{
+    color:#ce694b;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+button{
+    min-height:60px;
+    border:none;
+    border-radius:12px;
+    background:white;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.15s;
+}
+
+button:hover{
+    background:#e8efe9;
+}
+
+.random{
+    grid-column:1 / -1;
+    background:#285748;
+    color:white;
+}
+
+.random:hover{
+    background:#1f473a;
+}
+
+.set-time{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:1fr 1fr auto;
+    gap:10px;
+}
+
+select{
+    min-height:55px;
+    border:1px solid #cbd8d2;
+    border-radius:12px;
+    padding:0 10px;
+    font-size:18px;
+    background:white;
+}
+
+#setTimeBtn{
+    background:#d28243;
+    color:white;
+    padding:0 20px;
+}
+
+#setTimeBtn:hover{
+    background:#bc6c2d;
+}
+
+.footer-hint{
+    text-align:center;
+    color:#7c8882;
+    margin-top:15px;
+    font-size:14px;
+}
+
+/* 공통 페이지 메뉴 */
+.page-nav{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    padding:12px 20px;
+    background:#ffffffee;
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid #cbd8d2;
+}
+
+.page-nav button{
+    min-height:auto;
+    padding:9px 18px;
+    border:1px solid #cbd8d2;
+    border-radius:12px;
+    background:#fff;
+    color:#233d39;
+    font:inherit;
+    font-weight:800;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.page-nav button:hover{
+    background:#e8efe9;
+    transform:translateY(-1px);
+}
+
+.page-nav button:first-child{
+    color:#285748;
+}
+
+@media(max-width:800px){
+
+    .layout{
+        grid-template-columns:1fr;
+    }
+
+    h2{
+        font-size:40px;
+    }
+
+    .digital{
+        font-size:90px;
+        padding:18px;
+    }
+
+    .set-time{
+        grid-template-columns:1fr;
+    }
+
+    .page-nav{
+        padding:10px 8px;
+        gap:6px;
+    }
+
+    .page-nav button{
+        padding:8px 10px;
+        font-size:14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav class="page-nav" aria-label="페이지 이동">
+  <button type="button" onclick="location.href='index.html'">
+    🏠 처음으로
+  </button>
+
+  <button type="button" onclick="location.href='practicetime.html'">
+    ✏️ 시간연습
+  </button>
+
+  <button type="button" onclick="location.href='practicedate.html'">
+    ✏️ 날짜연습
+  </button>
+</nav>
+
+<main>
+
+<header>
+    <h1>시간 말하기 연습</h1>
+</header>
+
+<div class="layout">
+
+    <div class="clock-panel">
+
+        <svg class="clock" viewBox="0 0 500 500">
+
+            <circle
+                cx="250"
+                cy="250"
+                r="240"
+                fill="white"
+                stroke="#284c40"
+                stroke-width="6"/>
+
+            <g id="ticks"></g>
+            <g id="numbers"></g>
+
+            <g id="hourHand">
+                <line
+                    x1="250"
+                    y1="260"
+                    x2="250"
+                    y2="140"
+                    stroke="#294c40"
+                    stroke-width="14"
+                    stroke-linecap="round"/>
+            </g>
+
+            <g id="minuteHand">
+                <line
+                    x1="250"
+                    y1="270"
+                    x2="250"
+                    y2="80"
+                    stroke="#d47757"
+                    stroke-width="8"
+                    stroke-linecap="round"/>
+            </g>
+
+            <circle cx="250" cy="250" r="12" fill="#294c40"/>
+
+        </svg>
+
+    </div>
+
+    <div>
+
+        <h2>몇 시 몇 분이에요?</h2>
+
+        <div class="digital">
+            <span id="hour">1</span>:
+            <span class="minute" id="minute">00</span>
+        </div>
+
+        <div class="buttons">
+
+            <button id="previous">← 5분 전</button>
+
+            <button id="next">5분 후 →</button>
+
+            <button class="random" id="random">
+                ↻ 무작위 시간
+            </button>
+
+        </div>
+
+        <div class="set-time">
+
+            <select id="setHour"></select>
+
+            <select id="setMinute"></select>
+
+            <button id="setTimeBtn">
+                시간 지정
+            </button>
+
+        </div>
+
+        <div class="footer-hint">
+            ← 이전 · 다음 → · 스페이스바 = 무작위
+        </div>
+
+    </div>
+
+</div>
+
+</main>
+
+<script>
+
+const ns = "http://www.w3.org/2000/svg";
+
+const step = 5;
+const count = 720 / step;
+
+let index = 12;
+
+function el(id){
+    return document.getElementById(id);
+}
+
+/* 시계 눈금 */
+
+for(let i=0;i<60;i++){
+
+    const a=i*Math.PI/30;
+
+    const r1=i%5===0 ? 214 : 223;
+    const r2=231;
+
+    const line=document.createElementNS(ns,"line");
+
+    line.setAttribute("x1",250+Math.sin(a)*r1);
+    line.setAttribute("y1",250-Math.cos(a)*r1);
+
+    line.setAttribute("x2",250+Math.sin(a)*r2);
+    line.setAttribute("y2",250-Math.cos(a)*r2);
+
+    line.setAttribute("stroke",
+        i%5===0 ? "#526e60" : "#cad5cb");
+
+    line.setAttribute("stroke-width",
+        i%5===0 ? "3" : "1.5");
+
+    el("ticks").appendChild(line);
+}
+
+/* 숫자 */
+
+for(let i=1;i<=12;i++){
+
+    const a=i*Math.PI/6;
+
+    const text=document.createElementNS(ns,"text");
+
+    text.setAttribute("x",
+        250+Math.sin(a)*185);
+
+    text.setAttribute("y",
+        250-Math.cos(a)*185);
+
+    text.setAttribute("font-size","34");
+    text.setAttribute("font-weight","700");
+    text.setAttribute("fill","#29483e");
+    text.setAttribute("text-anchor","middle");
+    text.setAttribute("dominant-baseline","middle");
+
+    text.textContent=i;
+
+    el("numbers").appendChild(text);
+}
+
+/* 시간 선택 */
+
+for(let h=1;h<=12;h++){
+
+    const option=document.createElement("option");
+
+    option.value=h;
+    option.textContent=h+"시";
+
+    el("setHour").appendChild(option);
+}
+
+for(let m=0;m<60;m+=5){
+
+    const option=document.createElement("option");
+
+    option.value=m;
+
+    option.textContent=
+        String(m).padStart(2,"0")+"분";
+
+    el("setMinute").appendChild(option);
+}
+
+/* 화면 표시 */
+
+function render(){
+
+    const total=index*step;
+
+    let h=Math.floor(total/60);
+
+    const m=total%60;
+
+    if(h===0) h=12;
+
+    el("hour").textContent=h;
+
+    el("minute").textContent=
+        String(m).padStart(2,"0");
+
+    el("hourHand").setAttribute(
+        "transform",
+        `rotate(${h*30+m*0.5} 250 250)`
+    );
+
+    el("minuteHand").setAttribute(
+        "transform",
+        `rotate(${m*6} 250 250)`
+    );
+}
+
+/* 이동 */
+
+function move(delta){
+
+    index=(index+delta+count)%count;
+
+    render();
+}
+
+/* 무작위 */
+
+function randomTime(){
+
+    index=Math.floor(Math.random()*count);
+
+    render();
+}
+
+/* 버튼 */
+
+el("previous").addEventListener(
+    "click",
+    ()=>move(-1)
+);
+
+el("next").addEventListener(
+    "click",
+    ()=>move(1)
+);
+
+el("random").addEventListener(
+    "click",
+    randomTime
+);
+
+el("setTimeBtn").addEventListener(
+    "click",
+    ()=>{
+
+        const h=
+            Number(el("setHour").value);
+
+        const m=
+            Number(el("setMinute").value);
+
+        index=
+            (((h%12)*60)+m)/step;
+
+        render();
+    }
+);
+
+/* 키보드 */
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        if(e.key==="ArrowLeft"){
+            move(-1);
+        }
+
+        if(e.key==="ArrowRight"){
+            move(1);
+        }
+
+        if(e.code==="Space"){
+            e.preventDefault();
+            randomTime();
+        }
+    }
+);
+
+render();
+
+</script>
+
+</body>
+</html>
